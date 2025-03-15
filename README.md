@@ -31,8 +31,8 @@ Project BlackIce is a cloud-based web server designed to integrate modern securi
 
 
 ## 🏗️ Tech Stack  
-- **Backend:** Flask (Python) / Express.js (Node.js)  
+- **Backend:** Flask (Python)
 - **Security:** JWT Auth, Zero Trust Model  
 - **Monitoring:** ELK Stack, Prometheus, Grafana  
 - **ML:** TensorFlow / Scikit-Learn (Anomaly Detection)  
-- **Cloud Deployment:** AWS / Azure / GCP (TBD)  
+- **Cloud Deployment:** AWS  
