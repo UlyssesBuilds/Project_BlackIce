@@ -2,3 +2,6 @@ Flask==3.1.0	     # Most up-to-date stable Flask version
 waitress==2.1.1      # Production server for Windows
 Flask-Cors==5.0.1    # CORS support, compatible with Flask 2.x
 requests==2.26.0     # For handling HTTP requests
+python-dotenv        # managing environment variables in a .env file
+Flask-Migrate        # For handling database migrations with Flask
+psycopg2-binary==2.9.10 #interact with PostgreSQL databases
