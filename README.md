@@ -1,7 +1,7 @@
 # Project_BlackIce
-Web App to learn: Cloud, API, Security 
+Full Stack Web App to learn: Cloud, API, Security 
 
-Current Status: We have established a robust foundational web project on GitHub, leveraging Flask to create a scalable API-driven web application with a modular structure and automated development environment. This MVP includes essential security measures and is set up for future enhancements like ML-based anomaly detection and Zero Trust architecture integration.
+Current Status: We have established a robust foundational web project on GitHub, leveraging Flask to create a scalable API-driven web application with a modular structure and automated development environment. This MVP includes essential security measures and is set up for future scalability.
 
 ## Overview  
 Project BlackIce is a cloud-based web server designed to integrate modern security principles (Zero Trust, API-based firewalls) and AI-driven monitoring to analyze network traffic. The goal is to create a scalable and secure infrastructure while learning key cloud, security, and backend development concepts.
@@ -16,7 +16,7 @@ Project BlackIce is a cloud-based web server designed to integrate modern securi
 ## 📅 Project Phases & Progress
 ### **Phase 1: Core Web Server & API Development**
 - [x] Set up GitHub repo & project structure ✅
-- [ ] Implement a basic API server ✅
+- [x] Implement a basic API server ✅
 - [ ] Add HTTPS support for secure connections (next step)  
 
 ### **Phase 2: Security & Access Control**

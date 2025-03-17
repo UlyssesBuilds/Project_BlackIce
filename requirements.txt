@@ -8,3 +8,4 @@ psycopg2-binary==2.9.10 #interact with PostgreSQL databases
 bcrypt==4.3.0        # For securely hashing passwords
 pyjwt[crypto]==2.8.0 # For working with JWT and crypto features
 flask-limiter==2.7.0  # For rate-limiting API endpoints
+Flask-SQLAlchemy==2.5.1  # To manage SQLAlchemy integration with Flask
