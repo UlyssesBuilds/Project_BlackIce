@@ -5,3 +5,6 @@ requests==2.26.0     # For handling HTTP requests
 python-dotenv        # managing environment variables in a .env file
 Flask-Migrate        # For handling database migrations with Flask
 psycopg2-binary==2.9.10 #interact with PostgreSQL databases
+bcrypt==4.3.0        # For securely hashing passwords
+pyjwt[crypto]==2.8.0 # For working with JWT and crypto features
+flask-limiter==2.7.0  # For rate-limiting API endpoints
