@@ -16,33 +16,31 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Market(db.Model):
-    __tablename__ = 'markets' 
+    __tablename__ = 'markets'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    outcome_yes_price = db.Column(db.Float, default=0.5)  # 50-50 split at start
-    outcome_no_price = db.Column(db.Float, default=0.5)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     is_resolved = db.Column(db.Boolean, default=False)
-    final_outcome = db.Column(db.String(10), nullable=True)  # "yes" or "no"
+    outcome_yes_price = db.Column(db.Float, default=0.5)  # Probabilities start at 50%
+    outcome_no_price = db.Column(db.Float, default=0.5)
+    created_by = db.Column(db.Integer, nullable=False)
+    trades = db.relationship('Trade', backref='market', lazy=True)
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "outcome_yes_price": self.outcome_yes_price,
-            "outcome_no_price": self.outcome_no_price,
             "is_resolved": self.is_resolved,
-            "final_outcome": self.final_outcome
+            "outcome_yes_price": self.outcome_yes_price,
+            "outcome_no_price": self.outcome_no_price
         }
-
 
 class Bet(db.Model):
     __tablename__ = 'bets'  # PLURAL
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)  # Plural reference
-    market_id = db.Column(db.Integer, db.ForeignKey('markets.id'), nullable=False, index=True)  # Plural
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    market_id = db.Column(db.Integer, db.ForeignKey('markets.id'), nullable=False, index=True)
     bet_amount = db.Column(db.Numeric(10, 2), nullable=False)
     outcome = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(10), default="pending")
@@ -51,20 +49,20 @@ class Bet(db.Model):
 class Transaction(db.Model):
     __tablename__ = 'transactions'  # PLURAL
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)  # Plural
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     transaction_type = db.Column(db.String(15), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     transaction_id = db.Column(db.String(36), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
 
 class Trade(db.Model):
-    __tablename__ = 'trades' 
+    __tablename__ = 'trades'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    market_id = db.Column(db.Integer, db.ForeignKey('market.id'), nullable=False)
-    outcome = db.Column(db.String(10), nullable=False)  # "yes" or "no"
-    amount = db.Column(db.Float, nullable=False)  # How much they bet
-    price = db.Column(db.Float, nullable=False)  # At what price they bought
+    user_id = db.Column(db.Integer, nullable=False)
+    market_id = db.Column(db.Integer, db.ForeignKey('markets.id'), nullable=False)
+    outcome = db.Column(db.String(3), nullable=False)  # "yes" or "no"
+    amount = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=False)  # Price at the time of bet
 
     def to_dict(self):
         return {

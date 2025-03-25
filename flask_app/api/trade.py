@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 trade_bp = Blueprint('trade', __name__)
 
+# 🟢 POST: Place a bet
 @trade_bp.route('/trade', methods=['POST'])
 @jwt_required()
 def place_trade():
@@ -26,6 +27,7 @@ def place_trade():
         return jsonify({"error": "Invalid outcome, choose 'yes' or 'no'"}), 400
 
     price = market.outcome_yes_price if data["outcome"] == "yes" else market.outcome_no_price
+
     new_trade = Trade(
         user_id=user_id,
         market_id=data["market_id"],
@@ -38,3 +40,12 @@ def place_trade():
     db.session.commit()
 
     return jsonify(new_trade.to_dict()), 201
+
+# 🟢 GET: Fetch all bets by user
+@trade_bp.route('/trade', methods=['GET'])
+@jwt_required()
+def get_trades():
+    user_id = get_jwt_identity()
+    trades = Trade.query.filter_by(user_id=user_id).all()
+    
+    return jsonify([trade.to_dict() for trade in trades]), 200

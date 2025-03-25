@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Betting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <h1>BlackIce: Market Prediction</h1>
+    <h2>Temptation Never Stops </h2>
+
+    <!-- Login Form -->
+    <div id="login-section">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Markets Section (Hidden until logged in) -->
+    <div id="markets-section" style="display: none;">
+        <h2>Markets</h2>
+        <ul id="markets-list"></ul>
+    </div>
+
+    <!-- Login Status -->
+    <div id="loginStatus"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <script>
+        // Check if the user is logged in and update the status display
+        function checkLoginStatus() {
+            const token = localStorage.getItem("token");
+            const loginStatusDiv = document.getElementById("loginStatus");
+
+            if (token) {
+                loginStatusDiv.innerHTML = "Logged in";
+                // Redirect to /market.html (or your dashboard route)
+                window.location.href = "/templates/market.html";  // This performs the redirect to the new page
+            } else {
+                loginStatusDiv.innerHTML = "Not logged in";
+                // Optionally, show the login section again if not logged in
+                document.getElementById('markets-section').style.display = 'none';
+                document.getElementById('login-section').style.display = 'block';
+            }
+        }
+
+        // Run the login status check when the page loads
+        window.onload = function() {
+            checkLoginStatus(); // Initial check on page load
+        };
+
+        // Login function to authenticate and set the token
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Example of a login request (adjust according to your actual API)
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username_or_email: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    // Login successful
+                    localStorage.setItem("token", data.token); // Save token to localStorage
+                    checkLoginStatus(); // Recheck login status and update UI
+                } else if (data.message) {
+                    // Display error message if login fails
+                    alert("Login failed: " + data.message);
+                } else {
+                    // In case of unexpected response format
+                    alert("Unexpected response from server");
+                }
+            })
+            .catch(error => {
+                console.error("Error during login:", error);
+                alert("Error during login, please try again.");
+            });
+        }
+    </script>
+
+</body>
+</html>

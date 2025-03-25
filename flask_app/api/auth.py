@@ -129,9 +129,16 @@ def login_user():
             'aud': 'your-app-client'
         }, secret, algorithm='HS256')
 
-        response = jsonify({"message": "Login successful", "token": token, "expires_in": 3600})
-        response.set_cookie('auth_token', value=token, httponly=True, secure=True, samesite='Strict', max_age=3600)
-        return response
+	# Return token only for successful login
+        return jsonify({"token": token, "expires_in": 3600}), 200
+        
+
+	# we need to come back and edit this for HTTPSonly but am passing back JSON token for now
+        #response = jsonify({"token": token, "expires_in": 3600})
+        #response.set_cookie('auth_token', value=token, httponly=True, secure=True, samesite='Strict', max_age=3600)
+
+
+
     except Exception as e:
         current_app.logger.error(f"Login error: {str(e)}")
         return jsonify({"message": "Login failed"}), 500
