@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Betting - Active Markets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Simple CSS for the market grid */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .market-item {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .market-item h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .market-item p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .market-item .bet {
+            font-weight: bold;
+            color: #3b9e3b;
+        }
+
+        .market-item .division {
+            font-size: 0.9em;
+            color: #2b8a2b;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Betting Dashboard</h1>
+    <h2>Explore Active Betting Markets</h2>
+
+    <!-- Grid for Markets -->
+    <div class="market-grid" id="market-grid">
+        <!-- Markets will be dynamically added here by JS -->
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Fetch markets data from API
+            fetchMarkets();
+        };
+
+        // Function to fetch markets from the API
+        function fetchMarkets() {
+            fetch('/api/market/markets')
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        renderMarkets(data);
+                    } else {
+                        console.error("No markets found in the response.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching markets:', error);
+                });
+        }
+
+        // Function to render the markets into the grid
+        function renderMarkets(markets) {
+            const grid = document.getElementById('market-grid');
+            grid.innerHTML = ''; // Clear the grid before adding new content
+
+            markets.forEach(market => {
+                // Create a new market item
+                const marketItem = document.createElement('div');
+                marketItem.classList.add('market-item');
+
+                // Insert market details
+                marketItem.innerHTML = `
+                    <h3>${market.name}</h3>
+                    <p class="description">${market.description}</p>
+                    <p class="bet">Price for Yes: $${(market.outcome_yes_price * 100).toFixed(2)}</p>
+                    <p class="bet">Price for No: $${(market.outcome_no_price * 100).toFixed(2)}</p>
+                    <p class="resolved">${market.is_resolved ? 'Resolved' : 'Unresolved'}</p>
+                `;
+
+                // Append the market item to the grid
+                grid.appendChild(marketItem);
+            });
+        }
+    </script>
+
+</body>
+</html>
