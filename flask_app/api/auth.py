@@ -46,7 +46,12 @@ def register_page():
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
     try:
-        data = request.get_json() or request.form  # Accept JSON or form data
+        # Handle JSON vs form explicitly (REMOVED THE REDUNDANT LINE)
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
+            
         if not data:
             return jsonify({"message": "No input data provided"}), 400
 
@@ -70,7 +75,6 @@ def register_user():
         db.session.commit()
 
         return jsonify({"message": "User created successfully"}), 201
-
     except SQLAlchemyError as e:
         db.session.rollback()
         current_app.logger.error(f"Database error: {str(e)}")
@@ -95,7 +99,12 @@ def login_page():
 @limiter.limit("5 per minute", override_defaults=False)
 def login_user():
     try:
-        data = request.get_json() or request.form
+        # Explicit content type check (REMOVED THE REDUNDANT LINE)
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
+            
         if not data:
             return jsonify({"message": "No input data provided"}), 400
 
@@ -123,7 +132,6 @@ def login_user():
         response = jsonify({"message": "Login successful", "token": token, "expires_in": 3600})
         response.set_cookie('auth_token', value=token, httponly=True, secure=True, samesite='Strict', max_age=3600)
         return response
-
     except Exception as e:
         current_app.logger.error(f"Login error: {str(e)}")
         return jsonify({"message": "Login failed"}), 500
